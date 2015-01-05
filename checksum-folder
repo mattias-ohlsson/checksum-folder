@@ -7,11 +7,21 @@
 # checksum-folder [folder]
 
 set -e
+set -x
 
 if [ -n "$1" ]; then cd $1; fi
 
 tmpchecksumfile=$(mktemp)
-find . -type f -not -name "~*.checksum-folder" -exec md5sum {} + | sort > $tmpchecksumfile
+
+# find arguments for Dropbox:
+# -not -wholename "./.dropbox.cache/*"
+
+find . -type f -not -name "~*.checksum-folder" \
+    -not -wholename "./.dropbox.cache/*" \
+    -exec md5sum {} + | sort > $tmpchecksumfile
+
 tmpchecksumfilemd5=$(md5sum $tmpchecksumfile | awk '{print $1}')
+
 echo $tmpchecksumfilemd5
+
 mv $tmpchecksumfile ~$(date +%Y-%m-%d_%H%M%S)_"$tmpchecksumfilemd5"_$(hostname).checksum-folder
