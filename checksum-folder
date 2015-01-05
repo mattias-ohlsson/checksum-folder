@@ -7,7 +7,6 @@
 # checksum-folder [folder]
 
 set -e
-set -x
 
 if [ -n "$1" ]; then cd $1; fi
 
