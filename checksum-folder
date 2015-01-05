@@ -1,0 +1,17 @@
+#!/bin/bash
+# checksum-folder - Verify your synced folders
+#
+# https://github.com/mattias-ohlsson/checksum-folder
+#
+# Usage:
+# checksum-folder [folder]
+
+set -e
+
+if [ -n "$1" ]; then cd $1; fi
+
+tmpchecksumfile=$(mktemp)
+find . -type f -not -name "~*.checksum-folder" -exec md5sum {} + | sort > $tmpchecksumfile
+tmpchecksumfilemd5=$(md5sum $tmpchecksumfile | awk '{print $1}')
+echo $tmpchecksumfilemd5
+mv $tmpchecksumfile ~$(date +%Y-%m-%d_%H%M%S)_"$tmpchecksumfilemd5"_$(hostname).checksum-folder
