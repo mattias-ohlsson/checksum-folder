@@ -15,8 +15,12 @@ tmpchecksumfile=$(mktemp)
 # find arguments for Dropbox:
 # -not -wholename "./.dropbox.cache/*"
 
+# find arguments for Syncthing:
+# -not -wholename "./.stversions/*"
+
 find . -type f -not -name "~*.checksum-folder" \
     -not -wholename "./.dropbox.cache/*" \
+    -not -wholename "./.stversions/*" \
     -exec md5sum {} + | sort > $tmpchecksumfile
 
 tmpchecksumfilemd5=$(md5sum $tmpchecksumfile | awk '{print $1}')
